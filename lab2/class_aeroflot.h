@@ -1,3 +1,4 @@
+#define _SRT_SECURE_NO_WARNINGS
 #include "stdio.h"
 #include <string>
 #include <iostream>
@@ -53,22 +54,98 @@ public:
 
 	friend std::istream& operator>>(std::istream &in, FLIGHT& ptr)
 	{
-		std::cout << "enter flight number: " << endl;
-		in >> ptr.number;
-		in.ignore();
-
+		
+		do {
+			std::cout << "enter flight number: " << endl;
+			in.clear();
+			in.ignore(256, '\n'); 
+			//in.clear();
+			in >> ptr.number;
+			
+		} while (!in.good());
+		
+			
+		in.clear();
+		in.ignore(256, '\n');
 		std::cout << "enter destitation name: ";
 		getline(in, ptr.destination_name);
 		
 
 		std::cout << "enter plane type: ";
-		in.ignore();
+		in.clear();
 
 		getline(in, ptr.plane_type);
 		in.sync();
 		return in;
 	}
 
+	void edit()
+	{
+		int c = 0;
+		while (true)
+		{
+			printf("edit flight menu\n");
+			printf("-1 back\n");
+			printf("0 see values\n");
+			printf("11 edit flight number\n");
+			printf("12 edit flight destination\n");
+			printf("13 edit flight plane type\n");
+
+
+			scanf("%d", &c);
+			switch (c)
+			{
+			case -1:
+				return;
+
+			case 0:
+				cout << *this;
+				break;
+
+			case 11:
+			{
+				int n = -1;
+				printf("enter new value: ");
+				while (true)
+				{
+					scanf("%d", &n);
+					if (n <= 0)
+						printf("invalid input\n");
+					else
+						break;
+				}
+				set_number(n);
+
+			}
+				break;
+
+			case 12:
+			{	
+				string str;
+				printf("enter new value: ");
+				getline(cin, str);
+				set_destination_name(str);
+			}	
+			break;
+
+			case 13:
+			{	
+				string str;
+				printf("enter new value: ");
+				getline(cin, str);
+				set_plane_type(str);
+			}
+			break;
+
+
+			default:
+				printf("unknown command\n");
+			}
+
+
+
+		}
+	}
 
 };
 
@@ -87,6 +164,17 @@ protected:
 		LAST = add_obj;
 		size++;
 	}
+
+	void remove_last()
+	{
+		FLIGHT* prev_to_last = (*this)[size - 1];
+		delete LAST;
+		LAST = prev_to_last;
+		LAST->next == nullptr;
+		size--;
+	}
+
+
 public:
 
 	AEROFLOT()
@@ -99,15 +187,24 @@ public:
 	FLIGHT* operator[](int i)
 	{
 		if (i < 0 || i > size)
+		{
+			printf("index is out of range\n");
+			system("pause");
 			return nullptr;
 
+		}
 		int count = 0;
+
 		FLIGHT* ptr = HEAD;
+		if (ptr == nullptr)
+			return nullptr;
+
 		while (count != i)
 		{
 			ptr = ptr->next;
 			count++;
 		}
+		return ptr;
 	}
 
 	
@@ -127,24 +224,58 @@ public:
 
 		FLIGHT* add_obj = new FLIGHT;
 		std::cin >> *add_obj;
+
 		FLIGHT* next_ptr = prev_ptr->next;
+		if (next_ptr == nullptr)
+			return;
+
 		prev_ptr->next = add_obj;
 		add_obj->next = next_ptr;
 		size++;
 	}
 
-	void edit(int i);
-	void remove(int i);
+	void edit(int i)
+	{
+		FLIGHT* ptr = (*this)[i];
+		if (ptr == nullptr)
+			return;
+
+		ptr->edit();
+	}
+
+	void remove(int i)
+	{
+		if (i == size)
+		{
+			remove_last();
+			return;
+		}
+
+		FLIGHT* next_ptr = (*this)[i + 1];
+		if (next_ptr == nullptr)
+			return;
+		FLIGHT* prev_ptr = (*this)[i - 1];
+		if (prev_ptr == nullptr)
+			return;
+		delete (*this)[i];
+		prev_ptr->next = next_ptr;
+		size--;
+	}
 
 
 	void sort();
 
 	void print_all()
 	{
-		FLIGHT* ptr = HEAD;
+		if (size == 0)
+			return;
+
+		FLIGHT* ptr = HEAD->next;
+		if (ptr == nullptr)
+			return;
+
 		while (ptr != NULL)
-		{
-			
+		{	
 			std::cout << *ptr;
 			std::cout << std::endl;
 

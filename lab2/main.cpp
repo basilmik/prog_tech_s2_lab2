@@ -9,6 +9,8 @@ void menu_commands()
 	printf("-1 exit\n");
 	printf("0 see all records\n");
 	printf("1 add new record\n");
+	printf("2 edit record\n");
+	printf("3 remove record\n");
 }
 
 void menu()
@@ -30,11 +32,29 @@ void menu()
 		case 1:
 		{
 			int idx = 0;
-			printf("enter idx to witch to add: from 1 to %d\n", list.get_size()+1);
+			printf("enter idx to which to add: from 1 to %d\n", list.get_size()+1);
 			scanf("%d", &idx);
 			list.add(idx);
 			break;
 		}
+		case 2:
+		{
+			int idx = 0;
+			printf("enter idx which to edit: from 1 to %d\n", list.get_size());
+			scanf("%d", &idx);
+			list.edit(idx);
+			break;
+		}
+		case 3:
+		{
+			int idx = 0;
+			printf("enter idx which to remove: from 1 to %d\n", list.get_size());
+			scanf("%d", &idx);
+			list.remove(idx);
+			break;
+		}
+
+
 		default:
 			printf("unknown command\n");
 		}
