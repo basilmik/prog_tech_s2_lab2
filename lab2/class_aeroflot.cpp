@@ -104,7 +104,6 @@ void FLIGHT::edit()
 		printf("12 edit flight destination\n");
 		printf("13 edit flight plane type\n");
 
-
 		mscanf("%d", &c);
 		switch (c)
 		{
@@ -128,7 +127,6 @@ void FLIGHT::edit()
 					break;
 			}
 			set_number(n);
-
 		}
 		break;
 
@@ -150,15 +148,14 @@ void FLIGHT::edit()
 		}
 		break;
 
-
 		default:
 			printf("unknown command\n");
 		}
 
-
-
 	}
 }
+
+
 
 
 void AEROFLOT::add_to_end()
@@ -207,8 +204,7 @@ AEROFLOT::~AEROFLOT()
 	FLIGHT* prev_ptr = HEAD;
 
 	while (size != 0)
-	{
-			
+	{			
 		delete prev_ptr;
 		prev_ptr = ptr;
 		ptr = ptr->next;
@@ -234,6 +230,7 @@ FLIGHT* AEROFLOT::operator[](int i)
 		ptr = ptr->next;
 		count++;
 	}
+
 	return ptr;
 }
 
@@ -268,8 +265,7 @@ void AEROFLOT::add(int i)
 }
 
 void AEROFLOT::edit(int i)
-{
-		
+{	
 	FLIGHT* ptr = (*this)[i];
 	if (ptr == nullptr)
 		return;
@@ -304,7 +300,6 @@ void AEROFLOT::sort()
 	{
 		return;
 	}
-
 
 	FLIGHT* ptr = HEAD->next;
 
@@ -373,6 +368,7 @@ void AEROFLOT::find_by_dest()
 
 		ptr = ptr->next;
 	}
+
 	if (!found_flag)
 	{
 		printf("none found\n");
@@ -384,3 +380,4 @@ int AEROFLOT::get_size()
 	return size;
 }
 
+// EOF
