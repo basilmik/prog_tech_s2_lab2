@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+
 #include "stdio.h"
 #include "class_aeroflot.h"
 
@@ -6,11 +6,13 @@ AEROFLOT list;
 
 void menu_commands()
 {
-	printf("-1 exit\n");
+	printf("\n-1 exit\n");
 	printf("0 see all records\n");
 	printf("1 add new record\n");
 	printf("2 edit record\n");
 	printf("3 remove record\n");
+	printf("4 sort records\n");
+	printf("5 search by destination name\n");
 }
 
 void menu()
@@ -19,7 +21,8 @@ void menu()
 	while (true)
 	{
 		menu_commands();
-		std::cin >> c;
+
+		mscanf("%d", &c);
 		switch (c)
 		{
 		case -1:
@@ -33,27 +36,65 @@ void menu()
 		{
 			int idx = 0;
 			printf("enter idx to which to add: from 1 to %d\n", list.get_size()+1);
-			scanf("%d", &idx);
-			list.add(idx);
+			while (idx <= 0 || idx > list.get_size()+1)
+				mscanf("%d", &idx);
+			try {
+				list.add(idx);
+			}
+			catch (...)
+			{
+				printf("could not add\n");
+			}
 			break;
 		}
 		case 2:
 		{
+			if (list.get_size() <= 0)
+			{
+				printf("list is empty\n");
+				break;			
+			}
+
 			int idx = 0;
 			printf("enter idx which to edit: from 1 to %d\n", list.get_size());
-			scanf("%d", &idx);
+			while (idx <= 0 || idx > list.get_size())
+				mscanf("%d", &idx);
 			list.edit(idx);
 			break;
 		}
 		case 3:
 		{
+			if (list.get_size() <= 0)
+			{
+				printf("list is empty\n");
+				break;
+			}
+
 			int idx = 0;
 			printf("enter idx which to remove: from 1 to %d\n", list.get_size());
-			scanf("%d", &idx);
+			while (idx <= 0 || idx > list.get_size())
+				mscanf("%d", &idx);
 			list.remove(idx);
 			break;
 		}
 
+		case 4:
+			if (list.get_size() <= 0)
+			{
+				printf("list is empty\n");
+				break;
+			}
+			list.sort();
+			break;
+
+		case 5:
+			if (list.get_size() <= 0)
+			{
+				printf("list is empty\n");
+				break;
+			}
+			list.find_by_dest();
+			break;
 
 		default:
 			printf("unknown command\n");
